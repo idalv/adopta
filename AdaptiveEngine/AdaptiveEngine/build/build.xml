@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="AuthoringTool" default="dist" basedir=".">
+
+    <property file="build.properties" />
+
+    <!-- Define classpath -->
+    <path id="class.path">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    	
+        <fileset dir="${jboss.client.lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${classes.dir}"/>
+    </path>
+
+    <target name="init">
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${distrib.dir}"/>
+    </target>
+
+
+    <target name="compile" depends="init" description="compiles the application">
+    	<antcall target="add.persistence.jar" />
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="class.path" debug="on" encoding="UTF-8"/>
+    	<copy file="${src.dir}/com/adopta/bean/util/application.properties" tofile="${classes.dir}/com/adopta/bean/util/application.properties" overwrite="yes"/>
+    </target>
+
+    <target name="jar" depends="compile" description="builds the webservices jar file">
+        <jar destfile="${distrib.dir}/${jar.file}" basedir="${classes.dir}"/>
+    </target>
+	
+    <target name="clean">
+        <delete dir="${classes.dir}"/>
+        <delete dir="${distrib.dir}"/>
+    </target>
+
+    <macrodef name="jboss.start">
+        <attribute name="jboss.home" default=""/>
+        <sequential>
+            <java dir="${jboss.home}/server/default/conf"
+                  classname="org.jboss.Main" fork="true" spawn="true">
+                <arg line="-c ${jboss.home}/server/default"/>
+                <jvmarg value="-Xms32m"/>
+                <jvmarg value="-Xmx200m"/>
+                <classpath>
+                    <pathelement path="${jboss.home}/bin/run.jar"/>
+                    <pathelement path="${java.home}/lib/tools.jar"/>
+                </classpath>
+            </java>
+        </sequential>
+    </macrodef>
+
+
+    <macrodef name="jboss.shutdown">
+        <attribute name="jboss.home" default=""/>
+        <sequential>
+            <java dir="${jboss.home}/server/default/conf"
+                  classname="org.jboss.Shutdown" fork="true">
+                <arg line="${jboss.host} ${jboss.port}"/>
+                <classpath>
+                    <pathelement path="${jboss.home}/bin/shutdown.jar"/>
+                </classpath>
+            </java>
+            <sleep seconds="10"/>
+        </sequential>
+    </macrodef>
+
+
+    <target name="start.jboss">
+		<jboss.start jboss.home="${jboss.home}"/>
+    </target>
+
+
+    <target name="stop.jboss">
+        <jboss.shutdown jboss.home="${jboss.home}"/>
+    </target>
+
+    <target name="deployto.jboss">
+        <antcall target="stop.jboss"/>
+        <delete file="${jboss.home}/server/default/deploy/${jar.file}"/>
+        <copy file="${distrib.dir}/${jar.file}" todir="${jboss.home}/server/default/deploy/" overwrite="yes"/>
+    	<copy file="${project.home}/lib/eval-0.4.jar" todir="${jboss.home}/server/default/deploy/" overwrite="no"/>
+    	<antcall target="start.jboss"/>
+    </target>
+	
+    <target name="dist" depends="clean,jar" description="Clean, compiles, builds webservices jar and deploys the application">
+        <antcall target="deployto.jboss"/>
+    	<antcall target="clean"/>
+    </target>
+	
+	<target name="add.persistence.jar">
+		<copy file="${persistence.project.home}/build/dist/${persistence.project.name}.jar" todir="${lib.dir}" overwrite="yes"/>
+    </target>
+
+</project>

@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://webservice.adopta.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="AdaptiveEngineService" targetNamespace="http://webservice.adopta.com/">
+  <types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://webservice.adopta.com/" version="1.0">
+   <xs:element name="continueCourse" type="tns:continueCourse"/>
+   <xs:element name="continueCourseResponse" type="tns:continueCourseResponse"/>
+   <xs:element name="findAllComplexities" type="tns:findAllComplexities"/>
+   <xs:element name="findAllComplexitiesResponse" type="tns:findAllComplexitiesResponse"/>
+   <xs:element name="findCurrentVisitedPages" type="tns:findCurrentVisitedPages"/>
+   <xs:element name="findCurrentVisitedPagesResponse" type="tns:findCurrentVisitedPagesResponse"/>
+   <xs:element name="findVisitedPages" type="tns:findVisitedPages"/>
+   <xs:element name="findVisitedPagesResponse" type="tns:findVisitedPagesResponse"/>
+   <xs:element name="findVisitedPaths" type="tns:findVisitedPaths"/>
+   <xs:element name="findVisitedPathsResponse" type="tns:findVisitedPathsResponse"/>
+   <xs:element name="login" type="tns:login"/>
+   <xs:element name="loginResponse" type="tns:loginResponse"/>
+   <xs:element name="navigateToPage" type="tns:navigateToPage"/>
+   <xs:element name="navigateToPageResponse" type="tns:navigateToPageResponse"/>
+   <xs:element name="readAllLearners" type="tns:readAllLearners"/>
+   <xs:element name="readAllLearnersResponse" type="tns:readAllLearnersResponse"/>
+   <xs:element name="readCoursePortfolios" type="tns:readCoursePortfolios"/>
+   <xs:element name="readCoursePortfoliosResponse" type="tns:readCoursePortfoliosResponse"/>
+   <xs:element name="readLearnerCoursePortfolios" type="tns:readLearnerCoursePortfolios"/>
+   <xs:element name="readLearnerCoursePortfoliosResponse" type="tns:readLearnerCoursePortfoliosResponse"/>
+   <xs:element name="saveCoursePortfolios" type="tns:saveCoursePortfolios"/>
+   <xs:element name="saveCoursePortfoliosResponse" type="tns:saveCoursePortfoliosResponse"/>
+   <xs:element name="saveVisitedPaths" type="tns:saveVisitedPaths"/>
+   <xs:element name="saveVisitedPathsResponse" type="tns:saveVisitedPathsResponse"/>
+   <xs:element name="startCourse" type="tns:startCourse"/>
+   <xs:element name="startCourseResponse" type="tns:startCourseResponse"/>
+   <xs:element name="submitAnswers" type="tns:submitAnswers"/>
+   <xs:element name="submitAnswersResponse" type="tns:submitAnswersResponse"/>
+   <xs:complexType name="readLearnerCoursePortfolios">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="arg0" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="readLearnerCoursePortfoliosResponse">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:learnerCoursePortfolio"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="learnerCoursePortfolio">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="course" type="tns:course"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="learner" type="tns:user"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="course">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="user">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="learnerStyles" nillable="true" type="tns:learnerStyle"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="ontologies" nillable="true" type="tns:ontology"/>
+     <xs:element minOccurs="0" name="password" type="xs:string"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="roles" nillable="true" type="tns:role"/>
+     <xs:element minOccurs="0" name="status" type="tns:status"/>
+     <xs:element minOccurs="0" name="username" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="learnerStyle">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element name="percentage" type="xs:float"/>
+     <xs:element minOccurs="0" name="style" type="tns:style"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="style">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ontology">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="learningObjects" nillable="true" type="tns:learningObject"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="ontologyMetadata" nillable="true" type="tns:ontologyMetadata"/>
+     <xs:element name="userId" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="learningObject">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="complexity" type="tns:complexity"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="linksToChilds" nillable="true" type="tns:loToLOLink"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="linksToParents" nillable="true" type="tns:loToLOLink"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="lom" nillable="true" type="tns:lom"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+     <xs:element name="ontologyId" type="xs:long"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="questionAnswers" nillable="true" type="tns:questionAnswer"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="resources" nillable="true" type="tns:learningObjectResource"/>
+     <xs:element minOccurs="0" name="status" type="tns:status"/>
+     <xs:element minOccurs="0" name="subtype" type="tns:learningObjectSubtype"/>
+     <xs:element minOccurs="0" name="type" type="tns:learningObjectType"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="complexity">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="description" type="xs:string"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element name="level" type="xs:int"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="loToLOLink">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="label" type="xs:string"/>
+     <xs:element name="loChildId" type="xs:long"/>
+     <xs:element name="loParentId" type="xs:long"/>
+     <xs:element name="lomParent" type="xs:boolean"/>
+     <xs:element minOccurs="0" name="type" type="tns:learningObjectLinkType"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="learningObjectLinkType">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="lom">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="definition" type="tns:lomDefinition"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element name="learningObjectId" type="xs:long"/>
+     <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="lomDefinition">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="predefinedValues" nillable="true" type="tns:lomPredefinedValue"/>
+     <xs:element minOccurs="0" name="type" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="lomPredefinedValue">
+    <xs:sequence>
+     <xs:element name="definitionId" type="xs:long"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="questionAnswer">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element name="learningObjectId" type="xs:long"/>
+     <xs:element name="points" type="xs:float"/>
+     <xs:element minOccurs="0" name="text" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="learningObjectResource">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="blobType" type="xs:string"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element name="learningObjectId" type="xs:long"/>
+     <xs:element name="order" type="xs:int"/>
+     <xs:element minOccurs="0" name="resource" type="xs:base64Binary"/>
+     <xs:element minOccurs="0" name="stringResource" type="xs:string"/>
+     <xs:element minOccurs="0" name="type" type="tns:resourceType"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="resourceType">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="status">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="learningObjectSubtype">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+     <xs:element name="typeId" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="learningObjectType">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="subtypes" nillable="true" type="tns:learningObjectSubtype"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ontologyMetadata">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="definition" type="tns:ontologyMetadataDefinition"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element name="ontologyId" type="xs:long"/>
+     <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ontologyMetadataDefinition">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="predefinedValues" nillable="true" type="tns:ontologyMetadataPredefinedValue"/>
+     <xs:element minOccurs="0" name="type" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ontologyMetadataPredefinedValue">
+    <xs:sequence>
+     <xs:element name="definitionId" type="xs:long"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="role">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="description" type="xs:string"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="readAllLearners">
+    <xs:sequence>
+     <xs:element name="arg0" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="readAllLearnersResponse">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:user"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="login">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+     <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="loginResponse">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="return" type="tns:user"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="findAllComplexities">
+    <xs:sequence/>
+   </xs:complexType>
+   <xs:complexType name="findAllComplexitiesResponse">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:complexity"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="saveCoursePortfolios">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="tns:coursePortfolio"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="coursePortfolio">
+    <xs:sequence>
+     <xs:element name="addVisitedPaths" type="xs:boolean"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="assessmentRanks" nillable="true" type="tns:assessmentRank"/>
+     <xs:element name="automaticPathSelection" type="xs:boolean"/>
+     <xs:element minOccurs="0" name="course" type="tns:course"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="instructor" type="tns:user"/>
+     <xs:element name="numberOfQuestions" type="xs:int"/>
+     <xs:element name="showAllLearningObjects" type="xs:boolean"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="assessmentRank">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="complexities" nillable="true" type="tns:complexity"/>
+     <xs:element minOccurs="0" name="coursePortfolioId" type="xs:long"/>
+     <xs:element name="from" type="xs:float"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element name="to" type="xs:float"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="saveCoursePortfoliosResponse">
+    <xs:sequence/>
+   </xs:complexType>
+   <xs:complexType name="readCoursePortfolios">
+    <xs:sequence>
+     <xs:element name="arg0" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="readCoursePortfoliosResponse">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:coursePortfolio"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="startCourse">
+    <xs:sequence>
+     <xs:element name="arg0" type="xs:long"/>
+     <xs:element name="arg1" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="startCourseResponse">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="return" type="tns:visitedPage"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="visitedPage">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="lastVisitedPageFromSelectedPathId" type="xs:long"/>
+     <xs:element name="learnerCoursePortfolioId" type="xs:long"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="linksToNextPages" nillable="true" type="tns:pageToPageLink"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="linksToPreviousPages" nillable="true" type="tns:pageToPageLink"/>
+     <xs:element minOccurs="0" name="nextPage" type="tns:page"/>
+     <xs:element minOccurs="0" name="page" type="tns:page"/>
+     <xs:element minOccurs="0" name="previousPage" type="tns:page"/>
+     <xs:element minOccurs="0" name="score" type="xs:float"/>
+     <xs:element minOccurs="0" name="selectedPath" type="tns:workingPath"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="visitedPageToLearningObjects" nillable="true" type="tns:visitedPageToLearningObject"/>
+     <xs:element minOccurs="0" name="visitedPathId" type="xs:long"/>
+     <xs:element name="visitingOrder" type="xs:int"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="pageToPageLink">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="annotation" type="xs:string"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="label" type="xs:string"/>
+     <xs:element name="nextPageId" type="xs:long"/>
+     <xs:element name="previousPageId" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="page">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="course" type="tns:course"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="linksToNextPages" nillable="true" type="tns:pageToPageLink"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="linksToPreviousPages" nillable="true" type="tns:pageToPageLink"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="pageToLearningObjects" nillable="true" type="tns:pageToLearningObject"/>
+     <xs:element minOccurs="0" name="status" type="tns:status"/>
+     <xs:element minOccurs="0" name="threshold" type="xs:float"/>
+     <xs:element minOccurs="0" name="title" type="xs:string"/>
+     <xs:element minOccurs="0" name="type" type="tns:pageType"/>
+     <xs:element name="x" type="xs:int"/>
+     <xs:element name="y" type="xs:int"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="pageToLearningObject">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="learningObject" type="tns:learningObject"/>
+     <xs:element name="pageId" type="xs:long"/>
+     <xs:element name="position" type="xs:int"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="pageType">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="workingPath">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="course" type="tns:course"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="name" type="xs:string"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="workingPathPages" nillable="true" type="tns:workingPathPage"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="workingPathStyles" nillable="true" type="tns:workingPathStyle"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="workingPathPage">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="page" type="tns:page"/>
+     <xs:element name="pageIndex" type="xs:int"/>
+     <xs:element name="workingPathId" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="workingPathStyle">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="style" type="tns:style"/>
+     <xs:element name="weight" type="xs:float"/>
+     <xs:element name="workingPathId" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="visitedPageToLearningObject">
+    <xs:sequence>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element minOccurs="0" name="learningObject" type="tns:learningObject"/>
+     <xs:element name="position" type="xs:int"/>
+     <xs:element name="visitedPageId" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="navigateToPage">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="arg0" type="tns:visitedPage"/>
+     <xs:element name="arg1" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="navigateToPageResponse">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="return" type="tns:visitedPage"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="submitAnswers">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="arg0" type="tns:visitedPage"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="arg1" type="tns:longToListOfLongMapping"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="longToListOfLongMapping">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="key" type="xs:long"/>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="value" nillable="true" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="submitAnswersResponse">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="return" type="tns:visitedPage"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="continueCourse">
+    <xs:sequence>
+     <xs:element name="arg0" type="xs:long"/>
+     <xs:element name="arg1" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="continueCourseResponse">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="return" type="tns:visitedPage"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="saveVisitedPaths">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="tns:visitedPath"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="visitedPath">
+    <xs:sequence>
+     <xs:element minOccurs="0" name="comment" type="xs:string"/>
+     <xs:element name="id" type="xs:long"/>
+     <xs:element name="learnerCoursePortfolioId" type="xs:long"/>
+     <xs:element minOccurs="0" name="pathId" type="xs:long"/>
+     <xs:element minOccurs="0" name="satisfaction" type="xs:float"/>
+     <xs:element minOccurs="0" name="score" type="xs:float"/>
+     <xs:element name="visitingOrder" type="xs:int"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="saveVisitedPathsResponse">
+    <xs:sequence/>
+   </xs:complexType>
+   <xs:complexType name="findCurrentVisitedPages">
+    <xs:sequence>
+     <xs:element name="arg0" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="findCurrentVisitedPagesResponse">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:visitedPage"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="findVisitedPages">
+    <xs:sequence>
+     <xs:element name="arg0" type="xs:long"/>
+     <xs:element name="arg1" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="findVisitedPagesResponse">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:visitedPage"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="findVisitedPaths">
+    <xs:sequence>
+     <xs:element name="arg0" type="xs:long"/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="findVisitedPathsResponse">
+    <xs:sequence>
+     <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:visitedPath"/>
+    </xs:sequence>
+   </xs:complexType>
+  </xs:schema>
+  </types>
+  <message name="AdaptiveEngineService_readLearnerCoursePortfoliosResponse">
+    <part element="tns:readLearnerCoursePortfoliosResponse" name="readLearnerCoursePortfoliosResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_findVisitedPathsResponse">
+    <part element="tns:findVisitedPathsResponse" name="findVisitedPathsResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_login">
+    <part element="tns:login" name="login">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_loginResponse">
+    <part element="tns:loginResponse" name="loginResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_findAllComplexities">
+    <part element="tns:findAllComplexities" name="findAllComplexities">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_startCourseResponse">
+    <part element="tns:startCourseResponse" name="startCourseResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_submitAnswersResponse">
+    <part element="tns:submitAnswersResponse" name="submitAnswersResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_findVisitedPagesResponse">
+    <part element="tns:findVisitedPagesResponse" name="findVisitedPagesResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_saveVisitedPathsResponse">
+    <part element="tns:saveVisitedPathsResponse" name="saveVisitedPathsResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_readAllLearnersResponse">
+    <part element="tns:readAllLearnersResponse" name="readAllLearnersResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_readLearnerCoursePortfolios">
+    <part element="tns:readLearnerCoursePortfolios" name="readLearnerCoursePortfolios">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_findVisitedPaths">
+    <part element="tns:findVisitedPaths" name="findVisitedPaths">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_continueCourse">
+    <part element="tns:continueCourse" name="continueCourse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_submitAnswers">
+    <part element="tns:submitAnswers" name="submitAnswers">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_findAllComplexitiesResponse">
+    <part element="tns:findAllComplexitiesResponse" name="findAllComplexitiesResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_findCurrentVisitedPagesResponse">
+    <part element="tns:findCurrentVisitedPagesResponse" name="findCurrentVisitedPagesResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_saveCoursePortfoliosResponse">
+    <part element="tns:saveCoursePortfoliosResponse" name="saveCoursePortfoliosResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_findVisitedPages">
+    <part element="tns:findVisitedPages" name="findVisitedPages">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_readCoursePortfolios">
+    <part element="tns:readCoursePortfolios" name="readCoursePortfolios">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_readCoursePortfoliosResponse">
+    <part element="tns:readCoursePortfoliosResponse" name="readCoursePortfoliosResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_continueCourseResponse">
+    <part element="tns:continueCourseResponse" name="continueCourseResponse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_startCourse">
+    <part element="tns:startCourse" name="startCourse">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_readAllLearners">
+    <part element="tns:readAllLearners" name="readAllLearners">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_navigateToPage">
+    <part element="tns:navigateToPage" name="navigateToPage">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_saveVisitedPaths">
+    <part element="tns:saveVisitedPaths" name="saveVisitedPaths">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_saveCoursePortfolios">
+    <part element="tns:saveCoursePortfolios" name="saveCoursePortfolios">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_findCurrentVisitedPages">
+    <part element="tns:findCurrentVisitedPages" name="findCurrentVisitedPages">
+    </part>
+  </message>
+  <message name="AdaptiveEngineService_navigateToPageResponse">
+    <part element="tns:navigateToPageResponse" name="navigateToPageResponse">
+    </part>
+  </message>
+  <portType name="AdaptiveEngineService">
+    <operation name="continueCourse" parameterOrder="continueCourse">
+      <input message="tns:AdaptiveEngineService_continueCourse">
+    </input>
+      <output message="tns:AdaptiveEngineService_continueCourseResponse">
+    </output>
+    </operation>
+    <operation name="findAllComplexities" parameterOrder="findAllComplexities">
+      <input message="tns:AdaptiveEngineService_findAllComplexities">
+    </input>
+      <output message="tns:AdaptiveEngineService_findAllComplexitiesResponse">
+    </output>
+    </operation>
+    <operation name="findCurrentVisitedPages" parameterOrder="findCurrentVisitedPages">
+      <input message="tns:AdaptiveEngineService_findCurrentVisitedPages">
+    </input>
+      <output message="tns:AdaptiveEngineService_findCurrentVisitedPagesResponse">
+    </output>
+    </operation>
+    <operation name="findVisitedPages" parameterOrder="findVisitedPages">
+      <input message="tns:AdaptiveEngineService_findVisitedPages">
+    </input>
+      <output message="tns:AdaptiveEngineService_findVisitedPagesResponse">
+    </output>
+    </operation>
+    <operation name="findVisitedPaths" parameterOrder="findVisitedPaths">
+      <input message="tns:AdaptiveEngineService_findVisitedPaths">
+    </input>
+      <output message="tns:AdaptiveEngineService_findVisitedPathsResponse">
+    </output>
+    </operation>
+    <operation name="login" parameterOrder="login">
+      <input message="tns:AdaptiveEngineService_login">
+    </input>
+      <output message="tns:AdaptiveEngineService_loginResponse">
+    </output>
+    </operation>
+    <operation name="navigateToPage" parameterOrder="navigateToPage">
+      <input message="tns:AdaptiveEngineService_navigateToPage">
+    </input>
+      <output message="tns:AdaptiveEngineService_navigateToPageResponse">
+    </output>
+    </operation>
+    <operation name="readAllLearners" parameterOrder="readAllLearners">
+      <input message="tns:AdaptiveEngineService_readAllLearners">
+    </input>
+      <output message="tns:AdaptiveEngineService_readAllLearnersResponse">
+    </output>
+    </operation>
+    <operation name="readCoursePortfolios" parameterOrder="readCoursePortfolios">
+      <input message="tns:AdaptiveEngineService_readCoursePortfolios">
+    </input>
+      <output message="tns:AdaptiveEngineService_readCoursePortfoliosResponse">
+    </output>
+    </operation>
+    <operation name="readLearnerCoursePortfolios" parameterOrder="readLearnerCoursePortfolios">
+      <input message="tns:AdaptiveEngineService_readLearnerCoursePortfolios">
+    </input>
+      <output message="tns:AdaptiveEngineService_readLearnerCoursePortfoliosResponse">
+    </output>
+    </operation>
+    <operation name="saveCoursePortfolios" parameterOrder="saveCoursePortfolios">
+      <input message="tns:AdaptiveEngineService_saveCoursePortfolios">
+    </input>
+      <output message="tns:AdaptiveEngineService_saveCoursePortfoliosResponse">
+    </output>
+    </operation>
+    <operation name="saveVisitedPaths" parameterOrder="saveVisitedPaths">
+      <input message="tns:AdaptiveEngineService_saveVisitedPaths">
+    </input>
+      <output message="tns:AdaptiveEngineService_saveVisitedPathsResponse">
+    </output>
+    </operation>
+    <operation name="startCourse" parameterOrder="startCourse">
+      <input message="tns:AdaptiveEngineService_startCourse">
+    </input>
+      <output message="tns:AdaptiveEngineService_startCourseResponse">
+    </output>
+    </operation>
+    <operation name="submitAnswers" parameterOrder="submitAnswers">
+      <input message="tns:AdaptiveEngineService_submitAnswers">
+    </input>
+      <output message="tns:AdaptiveEngineService_submitAnswersResponse">
+    </output>
+    </operation>
+  </portType>
+  <binding name="AdaptiveEngineServiceBinding" type="tns:AdaptiveEngineService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="continueCourse">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="findAllComplexities">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="findCurrentVisitedPages">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="findVisitedPages">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="findVisitedPaths">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="login">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="navigateToPage">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="readAllLearners">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="readCoursePortfolios">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="readLearnerCoursePortfolios">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="saveCoursePortfolios">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="saveVisitedPaths">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="startCourse">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="submitAnswers">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="AdaptiveEngineService">
+    <port binding="tns:AdaptiveEngineServiceBinding" name="AdaptiveEngineService">
+      <soap:address location="http://127.0.0.1:8080/AdaptiveEngine/AdaptiveEngineService"/>
+    </port>
+  </service>
+</definitions>

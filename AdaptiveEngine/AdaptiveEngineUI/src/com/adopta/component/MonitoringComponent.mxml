@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300" xmlns:component="com.adopta.component.*"
+	creationComplete="initApp()">    
+    <mx:Script>
+    <![CDATA[
+    	import mx.collections.ArrayCollection;
+        import com.adopta.service.generated.User;
+        include "../actionscript/MonitoringScript.as";
+    
+        [Bindable]
+        public static var learner:User;
+
+        [Bindable]
+        public static var learnerCoursePortfolios:ArrayCollection;
+    ]]>
+    </mx:Script>
+    
+    <mx:TabNavigator width="100%" height="100%">
+		<mx:VBox label="Live Monitoring" width="100%" height="100%">
+			<component:MonitoringLiveComponent width="100%" height="100%"/>
+		</mx:VBox>
+		<mx:VBox label="History" width="100%" height="100%">
+            <component:MonitoringHistoryComponent width="100%" height="100%"/> 			
+		</mx:VBox>
+    </mx:TabNavigator>
+</mx:Canvas>

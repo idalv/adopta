@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"   
+	backgroundGradientColors="[#333333,#999999]" layout="vertical"
+    width="100%" height="100%" xmlns:component="com.adopta.component.*"
+    currentState="Login">
+	
+    <mx:Script>
+        <![CDATA[
+        	import com.adopta.actionscript.ApplicationContext;
+            public static var applicationContext:ApplicationContext = new ApplicationContext();
+        ]]>
+    </mx:Script>
+
+	<mx:states>
+        <mx:State name="Login">
+            <mx:AddChild position="lastChild">
+                <component:LoginComponent id="login" />
+            </mx:AddChild>
+        </mx:State>
+        
+        <mx:State name="Main">
+            <mx:AddChild position="lastChild">
+                <component:MainComponent id="main" />
+            </mx:AddChild>
+        </mx:State>
+    </mx:states>
+    
+</mx:Application>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+    <mx:Script>
+    <![CDATA[
+    	import mx.events.ItemClickEvent;
+    	import com.adopta.service.generated.VisitedPath;
+        import mx.events.ListEvent;
+        import mx.collections.SortField;
+        import mx.collections.Sort;
+        import com.adopta.service.generated.Page;
+        import com.adopta.service.generated.VisitedPage;
+        import mx.collections.ArrayCollection;
+        import com.adopta.service.generated.LearnerCoursePortfolio;
+        include "../actionscript/MonitoringScript.as";
+
+        [Bindable]
+        public static var visitedPaths:ArrayCollection;
+        
+        [Bindable]
+        public static var visitedPages:ArrayCollection;
+        
+        [Bindable]
+        public static var selectedPage:VisitedPage;
+        
+        [Bindable]
+        public static var selectedLearnerCoursePortfolio:LearnerCoursePortfolio;
+        
+        [Bindable]
+        public static var lastVisitingOrder:Number;
+        
+        private function selectPage(event:ListEvent):void {
+            var rowIndex:int = event.rowIndex;
+            selectedPage = VisitedPage(visitedPages.getItemAt(rowIndex));
+        }
+        
+        public function pressButton(event:ItemClickEvent):void {
+            if (event.index == 0) {
+                addAssessment();
+            } else if (event.index == 1) {
+                saveAssessments();
+            }
+        }
+        
+        public function addAssessment(): void {
+            var visitedPath:VisitedPath = new VisitedPath();
+            visitedPath.learnerCoursePortfolioId = selectedLearnerCoursePortfolio.id;
+            visitedPath.visitingOrder = ++lastVisitingOrder;
+            visitedPath.score = 0;
+            visitedPath.satisfaction = 0;
+            visitedPaths.addItem(visitedPath);
+        }
+        
+        public function saveAssessments(): void {
+        	saveVisitedPaths(visitedPaths);
+        }        
+    ]]>
+    </mx:Script>    
+    <mx:Panel width="100%" layout="absolute" title="Learner history" height="100%">
+        <mx:VBox width="100%" height="100%">
+            <mx:Spacer/>
+            <mx:HBox width="100%">
+                <mx:Label text="Courses" width="10%"/>
+                <mx:List dataProvider="{MonitoringComponent.learnerCoursePortfolios}" width="40%">
+                    <mx:itemRenderer>
+                        <mx:Component>
+                            <mx:VBox>
+                                <mx:Script>
+                                    <![CDATA[
+                                        import com.adopta.service.generated.LearnerCoursePortfolio;
+                                        include "../actionscript/MonitoringScript.as";
+                                    ]]>
+                                </mx:Script>
+                                <mx:LinkButton textAlign="left" width="100%" label="{data.course.name}" click="{MonitoringHistoryComponent.selectedLearnerCoursePortfolio=LearnerCoursePortfolio(data);readVisitedPaths(LearnerCoursePortfolio(data).id)}"/>
+                            </mx:VBox>
+                        </mx:Component>
+                    </mx:itemRenderer>
+                </mx:List>
+            </mx:HBox>
+            <mx:Label text="Visited paths" />
+            <mx:ButtonBar itemClick="pressButton(event);">
+                <mx:dataProvider>
+                    <mx:String>Add Assessment</mx:String>
+                    <mx:String>Save</mx:String>
+                </mx:dataProvider>
+            </mx:ButtonBar>
+            <mx:DataGrid width="100%" editable="true" dataProvider="{visitedPaths}">
+                <mx:columns>
+                    <mx:DataGridColumn headerText="Path ID" editable="false" width="100">
+                        <mx:itemRenderer>
+                            <mx:Component>
+                                <mx:VBox>
+                                    <mx:Script>
+                                    	<![CDATA[
+                                    		import com.adopta.service.generated.VisitedPath;
+                                    		include "../actionscript/MonitoringScript.as";
+                                    	]]>
+                                    </mx:Script>
+                                    <mx:LinkButton textAlign="left" width="100%" label="{data.pathId}" click="{readVisitedPages(VisitedPath(data).learnerCoursePortfolioId,VisitedPath(data).id)}"/>
+                                </mx:VBox>
+                            </mx:Component>
+                        </mx:itemRenderer>                    
+                    </mx:DataGridColumn>
+                    <mx:DataGridColumn headerText="Score" dataField="score" editorDataField="value" width="100">
+                        <mx:itemEditor>
+                            <mx:Component>
+                                <mx:NumericStepper stepSize="0.01" maximum="100"/>
+                            </mx:Component>
+                        </mx:itemEditor>                    
+                    </mx:DataGridColumn>
+                    <mx:DataGridColumn headerText="Satisfaction" dataField="satisfaction" editorDataField="value" width="100">
+                        <mx:itemEditor>
+                            <mx:Component>
+                                <mx:NumericStepper stepSize="0.01" maximum="100"/>
+                            </mx:Component>
+                        </mx:itemEditor>                      
+                    </mx:DataGridColumn>
+                    <mx:DataGridColumn headerText="Comment" dataField="comment"/>
+                </mx:columns>
+            </mx:DataGrid>
+            <mx:HBox>
+                <mx:VBox>
+	                <mx:Label text="Viewed pages"/>
+	                <mx:DataGrid dataProvider="{visitedPages}" itemClick="selectPage(event)">
+	                    <mx:columns>
+	                        <mx:DataGridColumn headerText="Title">
+                                <mx:itemRenderer>
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.page.title}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>
+	                        </mx:DataGridColumn>
+	                        <mx:DataGridColumn headerText="Type">
+                                <mx:itemRenderer>
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.page.type.name}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>
+                            </mx:DataGridColumn>                       
+	                        <mx:DataGridColumn headerText="Threshold">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.page.threshold}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>
+                            </mx:DataGridColumn>  	                        
+	                        <mx:DataGridColumn headerText="Status">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.page.status.name}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>	                        
+	                        </mx:DataGridColumn>
+	                     </mx:columns>
+	                </mx:DataGrid>
+                </mx:VBox>
+                <mx:VBox>
+                    <mx:Label text="Viewed learning objects"/>
+                    <mx:DataGrid dataProvider="{selectedPage.visitedPageToLearningObjects}">
+                        <mx:columns>
+                            <mx:DataGridColumn headerText="Name">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.learningObject.name}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>   
+                            </mx:DataGridColumn>
+                            <mx:DataGridColumn headerText="Complexity">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.learningObject.complexity.description}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>                              
+                            </mx:DataGridColumn>
+                            <mx:DataGridColumn headerText="Status">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.learningObject.status.name}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>                             
+                            </mx:DataGridColumn>
+                            <mx:DataGridColumn headerText="Ontology ID">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.learningObject.ontologyId}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer> 
+                            </mx:DataGridColumn>
+                        </mx:columns>
+                    </mx:DataGrid>
+                </mx:VBox>
+            </mx:HBox>
+        </mx:VBox>
+    </mx:Panel>
+</mx:Canvas>

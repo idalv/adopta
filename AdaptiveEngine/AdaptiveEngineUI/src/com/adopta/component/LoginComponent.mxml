@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="100%" creationComplete="initApp()">
+	
+	<mx:Script><![CDATA[
+
+        /*  The LoginScript.as file defines login methods. */
+        include "../actionscript/LoginScript.as";
+
+    ]]></mx:Script>
+    
+<mx:VBox height="100%" width="100%"  horizontalAlign="center">
+		 		
+ 	<mx:Spacer height="25%"/>
+ 	<mx:Label text="ADOPTA - Adaptive engine" fontSize="14" fontWeight="bold" color="#FFFFFF"/>
+ 	<mx:Spacer height="25%"/>
+ 	<mx:HBox width="100%" horizontalAlign="center" id="hbox1">
+	    <mx:Panel resizeEffect="Resize" id="loginPanel" title="Login" 
+		horizontalScrollPolicy="off" 
+		verticalScrollPolicy="off" borderColor="#FFF8F8">
+   
+		<mx:VBox id="vbox1">
+    		<mx:Form id="loginForm">
+       			<mx:FormItem label="Username:">
+            		<mx:TextInput id="username" maxChars="24"/>
+        		</mx:FormItem>
+        
+        		<mx:FormItem label="Password:">
+            		<mx:TextInput id="password" maxChars="24" displayAsPassword="true" />
+        		</mx:FormItem>
+        		<mx:FormItem>
+        		    <mx:Button label="Login" click="loginUser(username.text, password.text)" />
+        		</mx:FormItem>
+    		</mx:Form>
+		</mx:VBox>
+		</mx:Panel>
+ 	</mx:HBox>
+	<mx:Spacer height="100%"/>
+</mx:VBox>
+	
+</mx:Canvas>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300"
+	creationComplete="initApp();">
+    <mx:Script>
+    <![CDATA[
+    	import mx.events.CloseEvent;
+        include "../actionscript/AdministrationScript.as";
+        
+    	import mx.managers.PopUpManager;
+    	import mx.events.ListEvent;
+    	import com.adopta.service.generated.Complexity;
+    	import mx.binding.utils.BindingUtils;
+    	import com.adopta.service.generated.CoursePortfolio;
+    	import com.adopta.service.generated.AssessmentRank;
+    	import com.adopta.component.AssesmentRanksComponent;
+        import mx.collections.*;
+         
+        [Bindable]
+        public static var coursePortfolios:ArrayCollection;
+        
+        private function cellClicked(event:ListEvent):void {
+        	if (event.columnIndex == 6) {
+        		var rowIndex:int = event.rowIndex;
+        		var assessmentRankPopup:AssesmentRanksComponent = AssesmentRanksComponent(PopUpManager.createPopUp(this, AssesmentRanksComponent, true));
+        		assessmentRankPopup.addEventListener(CloseEvent.CLOSE, submitAssesmentRanks);
+        		assessmentRankPopup.coursePortfolio = coursePortfolios[rowIndex];
+        		PopUpManager.centerPopUp(assessmentRankPopup);
+        	}
+        }
+        
+        private function submitAssesmentRanks(event:Event):void {
+        	coursePortfolios = new ArrayCollection(coursePortfolios.toArray());
+        }
+        
+        public static function displayAssessmentRanks(assessmentRanks:Array):String {
+            var ranks:String = "";
+            
+            for (var i:int = 0; i < assessmentRanks.length; i++) {
+            	var assessmentRank:AssessmentRank = assessmentRanks[i];
+                
+                var complexities:String = "";
+                for (var j:int = 0; j < assessmentRank.complexities.length; j++) {
+                    var complexity:Complexity = assessmentRank.complexities[j];
+                    complexities += complexity.level;
+                    if (j+1 != assessmentRank.complexities.length) {
+                        complexities += ",";
+                    }
+                }
+                
+                var range:String = "[" + assessmentRank.from + "," + assessmentRank._to + "] " + complexities;
+                ranks += range;
+                if (i+1 != assessmentRanks.length) {
+                    ranks += "\r";
+                }
+            }
+            
+            return ranks;
+        }
+    ]]>
+    </mx:Script>
+    
+    <mx:Panel title="Adaptive Engine administration" width="100%" height="100%">
+	    <mx:VBox width="100%" height="100%">
+			<mx:DataGrid id="coursePortfoliosGrid" dataProvider="{coursePortfolios}" editable="true" itemClick="cellClicked(event);" width="100%" height="100%">
+			    <mx:columns>
+		            <mx:DataGridColumn headerText="Course Name" editable="false">
+		                <mx:itemRenderer>
+		                    <mx:Component>
+		                        <mx:VBox verticalAlign="middle">
+		                            <mx:Text width="100%" text="{data.course.name}"/>
+		                        </mx:VBox>
+		                    </mx:Component>
+		                </mx:itemRenderer>
+		            </mx:DataGridColumn>
+		            <mx:DataGridColumn headerText="Instructor" editable="false">
+	                    <mx:itemRenderer>
+	                        <mx:Component>
+	                            <mx:VBox verticalAlign="middle">
+	                                <mx:Text width="100%" text="{data.instructor.username}"/>
+	                            </mx:VBox>
+	                        </mx:Component>
+	                    </mx:itemRenderer>
+	                </mx:DataGridColumn>
+		            <mx:DataGridColumn dataField="addVisitedPaths" textAlign="center" headerText="Include Visited Paths"
+		            	itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected" />
+		            <mx:DataGridColumn dataField="automaticPathSelection" textAlign="center" headerText="Automatic Path Selection"
+		            	itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected" />
+		            <mx:DataGridColumn dataField="showAllLearningObjects" textAlign="center" headerText="Show All Learning Objects"
+		            	itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected" />
+		            <mx:DataGridColumn dataField="numberOfQuestions" headerText="Number of Questions" editorDataField="value">
+		                <mx:itemEditor>
+		                	<mx:Component>
+		                		<mx:NumericStepper stepSize="1" maximum="100"/>
+		                	</mx:Component>
+		                </mx:itemEditor>
+		            </mx:DataGridColumn>
+		            <mx:DataGridColumn headerText="Assessment Ranks" editable="false">
+		                <mx:itemRenderer >
+		                    <mx:Component>
+		                        <mx:VBox>
+		                            <mx:Text text="{AdministrationComponent.displayAssessmentRanks(data.assessmentRanks)}" height="100%" width="100%"/>                        	
+		                        </mx:VBox>
+		                    </mx:Component>
+		                </mx:itemRenderer>
+		            </mx:DataGridColumn>     	
+		        </mx:columns> 
+			</mx:DataGrid>
+			<mx:HBox width="100%" horizontalAlign="center" verticalAlign="bottom">
+				<mx:Button label="Save" click="saveCoursePortfolios(coursePortfolios.toArray())"/>
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Panel>
+</mx:Canvas>

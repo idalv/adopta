@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">    
+    <mx:Script>
+    <![CDATA[
+    	import mx.events.ListEvent;
+    	import mx.collections.SortField;
+    	import mx.collections.Sort;
+    	import com.adopta.service.generated.Page;
+    	import com.adopta.service.generated.VisitedPage;
+    	import mx.collections.ArrayCollection;
+        import com.adopta.service.generated.LearnerCoursePortfolio;
+
+        [Bindable]
+        public static var currentPages:ArrayCollection;
+        
+        [Bindable]
+        public static var selectedPage:VisitedPage;
+        
+        private function cellClicked(event:ListEvent):void {
+            var rowIndex:int = event.rowIndex;
+            selectedPage = VisitedPage(currentPages.getItemAt(rowIndex));
+        }
+    ]]>
+    </mx:Script>
+    <mx:Panel width="100%" layout="absolute" title="Live learner statistics" height="100%">
+	    <mx:VBox width="100%" height="100%">
+	        <mx:Spacer/>
+	        <mx:HBox width="100%">
+		        <mx:Label text="Learner style" width="10%"/>
+		        <mx:DataGrid width="20%" rowCount="3" dataProvider="{MonitoringComponent.learner.learnerStyles}">
+		        	<mx:columns>
+		        		<mx:DataGridColumn headerText="Style">
+		        		    <mx:itemRenderer>
+		        		    	<mx:Component>
+		        		    		<mx:Text text="{data.style.name}" />
+		        		    	</mx:Component>
+		        		    </mx:itemRenderer>
+		        		</mx:DataGridColumn>
+		        	    <mx:DataGridColumn dataField="percentage" headerText="Percentage" />
+		        	</mx:columns>
+		        </mx:DataGrid>
+	        </mx:HBox>
+	        <mx:HRule width="100%"/>
+	        <mx:HBox width="100%">
+	            <mx:Label text="Courses" width="10%"/>
+	            <mx:List dataProvider="{MonitoringComponent.learnerCoursePortfolios}" width="40%">
+	                <mx:itemRenderer>
+                        <mx:Component>
+                            <mx:VBox>
+                                <mx:Script>
+                                	<![CDATA[
+                                		import com.adopta.service.generated.LearnerCoursePortfolio;
+                                		include "../actionscript/MonitoringScript.as";
+                                	]]>
+                                </mx:Script>
+                                <mx:LinkButton textAlign="left" width="100%" label="{data.course.name}" click="{readCurrentVisitedPages(LearnerCoursePortfolio(data).id)}"/>
+                            </mx:VBox>
+                        </mx:Component>
+                    </mx:itemRenderer>
+	            </mx:List>
+            </mx:HBox>
+            <mx:HBox width="100%">
+                <mx:VBox width="40%">
+	               <mx:Label text="Recently viewed pages"/>
+	               <mx:DataGrid dataProvider="{currentPages}" itemClick="cellClicked(event);" width="100%"> 
+	                   <mx:columns>
+	                       <mx:DataGridColumn headerText="Title">
+	                           <mx:itemRenderer >
+                                   <mx:Component>
+                                       <mx:VBox>
+                                           <mx:Text text="{data.page.title}" height="100%" width="100%"/>                         
+                                       </mx:VBox>
+                                   </mx:Component>
+                               </mx:itemRenderer>
+	                       </mx:DataGridColumn>
+	                       <mx:DataGridColumn headerText="Preselected path name" dataField="selectedPath.name">
+                               <mx:itemRenderer >
+                                   <mx:Component>
+                                       <mx:VBox>
+                                           <mx:Text text="{(data.selectedPath!=null) ? data.selectedPath.name : '-'}" height="100%" width="100%"/>                         
+                                       </mx:VBox>
+                                   </mx:Component>
+                               </mx:itemRenderer>	                       
+	                       </mx:DataGridColumn>
+	                    </mx:columns>
+	               </mx:DataGrid>
+                </mx:VBox>
+                <mx:VBox width="60%">
+	                <mx:Label text="Recently viewed learning objects"/>
+	                <mx:DataGrid dataProvider="{selectedPage.visitedPageToLearningObjects}" width="100%">
+	                    <mx:columns>
+	                        <mx:DataGridColumn headerText="Name">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.learningObject.name}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>   
+	                        </mx:DataGridColumn>
+	                        <mx:DataGridColumn headerText="Complexity">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.learningObject.complexity.description}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer>   	                        
+	                        </mx:DataGridColumn>
+	                        <mx:DataGridColumn headerText="Ontology ID">
+                                <mx:itemRenderer >
+                                    <mx:Component>
+                                        <mx:VBox>
+                                            <mx:Text text="{data.learningObject.ontologyId}" height="100%" width="100%"/>                         
+                                        </mx:VBox>
+                                    </mx:Component>
+                                </mx:itemRenderer> 
+	                        </mx:DataGridColumn>
+	                     </mx:columns>
+	                </mx:DataGrid>
+                </mx:VBox>
+            </mx:HBox>
+	    </mx:VBox>
+    </mx:Panel>
+</mx:Canvas>

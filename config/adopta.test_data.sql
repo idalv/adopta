@@ -1,0 +1,54 @@
+﻿-- commmon
+insert into user (id, password, username, status_id) values (1, 'bobi', 'bobi', 1);
+insert into user (id, password, username, status_id) values (2, 'vladi', 'vladi', 1);
+insert into user (id, password, username, status_id) values (3, 'student', 'student', 1);
+insert into user_to_role (user_id, role_id) values (1, 1);
+insert into user_to_role (user_id, role_id) values (2, 2);
+insert into user_to_role (user_id, role_id) values (3, 3);
+
+
+-- adaptive engine
+insert into style_to_user (id, percentage, user_id, style_id) values (1, 20, 3, 1);
+insert into style_to_user (id, percentage, user_id, style_id) values (2, 50, 3, 2);
+insert into style_to_user (id, percentage, user_id, style_id) values (3, 30, 3, 3);
+insert into course (id, name) values (1, 'uml');
+insert into course (id, name) values (2, 'xml');
+insert into course_portfolio (id, add_visited_paths, authomatic_path_selection, number_of_questions, show_all_learning_objects, course_id, user_id) values(1, 1, 1, 19, 1, 1, 2);
+insert into course_portfolio (id, add_visited_paths, authomatic_path_selection, number_of_questions, show_all_learning_objects, course_id, user_id) values(2, 1, 1, 19, 1, 2, 2);
+insert into learner_course_portfolio (id, course_id, user_id) values (1, 1, 3);
+insert into learner_course_portfolio (id, course_id, user_id) values (2, 2, 3);
+insert into page (id, title, x, y, course_id, status_id, page_type_id) values (1, 'Welcome', 0, 0, 1, 1, 1);
+insert into page (id, title, x, y, course_id, status_id, page_type_id) values (2, 'Introduction', 0, 0, 1, 1, 1);
+insert into page (id, title, x, y, course_id, status_id, page_type_id) values (3, 'Lesson 1', 0, 0, 1, 1, 1);
+insert into page (id, title, x, y, course_id, status_id, page_type_id) values (4, 'Lesson 2', 0, 0, 1, 1, 1);
+insert into page (id, title, x, y, course_id, status_id, page_type_id) values (5, 'Lesson 3', 0, 0, 1, 1, 1);
+insert into page (id, title, x, y, course_id, status_id, page_type_id) values (6, 'Lesson 4', 0, 0, 1, 1, 1);
+insert into page (id, title, x, y, course_id, status_id, page_type_id) values (7, 'Check Point 1', 0, 0, 1, 1, 2);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (1, 'Introduction', 'Introduction', 2, 1);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (2, 'Lesson 1', 'Lesson 1', 3, 2);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (3, 'Lesson 2', 'Lesson 2', 4, 3);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (4, 'Lesson 3', 'Lesson 3', 5, 4);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (5, 'Lesson 4', 'Lesson 4', 6, 5);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (6, 'Check Point 1', 'Check Point 1', 7, 6);
+insert into working_path (id, name, course_id) values (1, 'Chapter 1', 1);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (1, 1, 1, 1);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (2, 2, 2, 1);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (3, 3, 3, 1);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (4, 4, 4, 1);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (5, 5, 5, 1);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (6, 6, 6, 1);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (7, 7, 7, 1);
+insert into working_path_to_style (id, weight, style_id, working_path_id) values (1, 10, 1, 1);
+insert into working_path_to_style (id, weight, style_id, working_path_id) values (2, 60, 2, 1);
+insert into working_path_to_style (id, weight, style_id, working_path_id) values (3, 30, 3, 1);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (7, 'Lesson 1 Brief', 'Lesson 1 Brief', 3, 1);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (8, 'Lesson 2 Brief', 'Lesson 2 Brief', 5, 3);
+insert into page_to_page_link (id, annotation, label, next_page_id, previous_page_id) values (9, 'Check Point 1 Brief', 'Check Point 1 Brief', 7, 5);
+insert into working_path (id, name, course_id) values (2, 'Chapter 1 Brief', 1);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (8, 1, 1, 2);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (9, 2, 3, 2);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (10, 3, 5, 2);
+insert into working_path_to_page (id, page_index, page_id, working_path_id) values (11, 4, 7, 2);
+insert into working_path_to_style (id, weight, style_id, working_path_id) values (4, 90, 1, 2);
+insert into working_path_to_style (id, weight, style_id, working_path_id) values (5, 5, 2, 2);
+insert into working_path_to_style (id, weight, style_id, working_path_id) values (6, 5, 3, 2);

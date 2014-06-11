@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+    <mx:Script>
+    <![CDATA[
+    	import mx.controls.TextArea;
+    	import mx.controls.RichTextEditor;
+    	import mx.controls.Image;
+    	import mx.controls.Label;
+    	import mx.controls.Button;
+    	import mx.controls.CheckBox;
+    	import mx.controls.RadioButton;
+    	import com.adopta.service.generated.QuestionAnswer;
+    	import mx.controls.RadioButtonGroup;
+    	import com.adopta.enum.LOSubTypeEnum;
+    	import com.adopta.enum.ResourceTypeEnum;
+    	import com.adopta.service.generated.ResourceType;
+    	import mx.controls.Text;
+    	import com.adopta.service.generated.LearningObjectResource;
+    	import com.adopta.service.generated.VisitedPageToLearningObject;
+    	import com.adopta.service.generated.LearningObject;
+    	import mx.collections.SortField;
+    	import mx.collections.Sort;
+    	import mx.collections.ArrayCollection;
+    	import com.adopta.service.generated.Page;
+    	import com.adopta.service.generated.VisitedPage;
+    	import com.adopta.service.generated.LearnerCoursePortfolio;
+    	include "../actionscript/CourseScript.as";
+    	
+    	public static var CONTENT_TYPE:Number = 1;
+    	public static var CONTROL_TYPE:Number = 2;
+    	public static var RESULT_TYPE:Number = 3;
+    	
+        [Bindable]
+        public static var learnerCoursePortfolio:LearnerCoursePortfolio;
+        
+        [Bindable]
+        public static var visitedPage:VisitedPage;
+        
+        public var allAnswers:Dictionary;
+        
+		public function renderObjects():void {
+			pageContent.removeAllChildren();
+			allAnswers = new Dictionary();
+			
+			if (visitedPage.page.type.id == RESULT_TYPE) {
+				var result:Text = new Text();
+                pageContent.addChild(result);
+                result.text = "Your result from the test is " + visitedPage.score + " precentage!";
+			} else if (visitedPage.visitedPageToLearningObjects != null && visitedPage.visitedPageToLearningObjects.length > 0) {
+            	var visitedPageToLos:ArrayCollection = new ArrayCollection(visitedPage.visitedPageToLearningObjects);
+                var sortByPosition:Sort = new Sort();
+                var sortFiled:SortField = new SortField("position", true, false, true);
+                sortByPosition.fields = [sortFiled];
+                visitedPageToLos.sort = sortByPosition;
+                visitedPageToLos.refresh();
+                
+                // Process each learning object
+                for (var i:int = 0; i < visitedPageToLos.length; i++) {
+                	var visitedPageToLo:VisitedPageToLearningObject = visitedPageToLos[i];
+                	var learningObject:LearningObject = visitedPageToLo.learningObject;
+                	
+                	if (learningObject.resources != null && learningObject.resources.length > 0) {
+	                    var loResources:ArrayCollection = new ArrayCollection(learningObject.resources);
+	                    var sortByOrder:Sort = new Sort();
+	                    var sortFiled:SortField = new SortField("order", true, false, true);
+	                    sortByOrder.fields = [sortFiled];
+	                    loResources.sort = sortByOrder;
+	                    loResources.refresh();
+	                    
+	                    // Process the learning object resources
+	                    for (var j:int = 0; j < loResources.length; j++) {
+                            var resource:LearningObjectResource = loResources[j];
+                        
+                            if (resource.type.id == ResourceTypeEnum.TEXT) {
+                                var textField:Text = new Text();
+                                pageContent.addChild(textField);
+                                textField.text = resource.stringResource;
+                            
+                            } else if (resource.type.id == ResourceTypeEnum.RICHTEXT) {
+                                var richField:Text = new Text();
+                                pageContent.addChild(richField);
+                                richField.htmlText = cleanHTML(resource.stringResource);
+                                
+                            } else if (resource.type.id == ResourceTypeEnum.IMAGE) {
+                                var imageField:Image = new Image();
+                                pageContent.addChild(imageField);
+                                imageField.source = resource.resource;
+                            }
+                        }
+                    }
+                    
+                    // Process the learning object answers if there are any
+                    if (learningObject.questionAnswers != null && learningObject.questionAnswers.length > 0) {
+                    	var answers:ArrayCollection = new ArrayCollection(learningObject.questionAnswers);
+                    	var answerFields:ArrayCollection = new ArrayCollection();
+                    	
+                    	if (learningObject.subtype.name == LOSubTypeEnum.ONE_OF_MANY) {
+                    		var answersGroup:RadioButtonGroup = new RadioButtonGroup();
+                            for (var k:int = 0; k < answers.length; k++) {
+                            	var answerOne:QuestionAnswer = answers[k];
+                            	var answerRadio:RadioButton = new RadioButton();
+                            	answerRadio.label = answerOne.text;
+                            	answerRadio.id = String(answerOne.id);
+                            	answerRadio.group = answersGroup;
+                            	pageContent.addChild(answerRadio);
+                            	answerFields.addItem(answerRadio);
+                            }
+                            
+                    	} else if (learningObject.subtype.name == LOSubTypeEnum.MANY_OF_MANY) {
+                            for (var l:int = 0; l < answers.length; l++) {
+                                var answerMany:QuestionAnswer = answers[l];
+                                var answerCheck:CheckBox = new CheckBox();
+                                answerCheck.label = answerMany.text;
+                                answerCheck.id = String(answerMany.id); 
+                                pageContent.addChild(answerCheck);
+                                answerFields.addItem(answerCheck);
+                            }
+                    	}
+                    	
+                    	allAnswers[learningObject.id] = answerFields;
+                    }
+                }
+            }
+		}
+		
+		public function collectAnswers():void {
+			var selectedAnwers:Dictionary = new Dictionary();
+			
+			// Process each question
+			for (var key:String in allAnswers) {
+				var loId:Number = Number(key);
+				var questionAnswers:ArrayCollection = allAnswers[loId];
+				
+				var selectedQuestionAnswers:ArrayCollection = new ArrayCollection();
+				// Process each answer
+                for (var i:int = 0; i < questionAnswers.length; i++) {
+                	var answerField:Button = Button(questionAnswers[i]);
+                	if (answerField.selected == true) {
+                		// Add selected ones
+                		selectedQuestionAnswers.addItem(answerField.id)
+                	}
+                }
+                selectedAnwers[loId] = selectedQuestionAnswers;
+			}
+			
+			submitAnswers(selectedAnwers);
+		}
+		
+        private function cleanHTML(str:String):String {
+           var pattern:RegExp = /&lt;/g;
+           var str:String = str.replace(pattern, "<");
+           str = str.replace(pattern, "");
+           return str;
+        }		
+    ]]>
+    </mx:Script>
+    
+    <mx:VBox width="100%" height="100%">
+        <mx:VBox height="90%" width="100%">
+            <mx:HBox width="100%" horizontalAlign="center" >
+                <mx:Label text="{visitedPage.page.title}" fontSize="12" fontWeight="bold"/>	
+            </mx:HBox> 
+            <mx:VBox id="pageContent" height="100%" width="100%" />
+        </mx:VBox>
+        <mx:HRule width="100%" visible="{visitedPage.page.type.id == CONTENT_TYPE}" />
+        <mx:HBox width="100%" verticalAlign="bottom" horizontalAlign="center" visible="{visitedPage.page.type.id == CONTENT_TYPE}">
+            <mx:VBox height="100%" width="20%" horizontalAlign="left" verticalAlign="bottom">
+                <mx:Text text="Back to the preselected path" buttonMode="true" useHandCursor="true" mouseChildren="false" width="100%" fontWeight="bold" textAlign="left" visible="{visitedPage.selectedPath==null}" click="navigateToPage(visitedPage.lastVisitedPageFromSelectedPathId)"/>
+                <mx:Text text="Previous page" buttonMode="true" useHandCursor="true" mouseChildren="false" width="100%" fontWeight="bold" textAlign="left" visible="{visitedPage.previousPage!=null}" click="navigateToPage(visitedPage.previousPage.id)"/>            
+            </mx:VBox>
+        	<mx:HBox height="100%" width="60%" horizontalAlign="center" verticalAlign="bottom">
+        	    <mx:VBox width="50%" height="100%" horizontalAlign="left" verticalAlign="bottom">
+	        	    <mx:Label text="Incoming links" textAlign="left" fontWeight="bold"/>
+	        	    <mx:List dataProvider="{visitedPage.linksToPreviousPages}"
+	                    width="100%" borderThickness="0" textAlign="left" rowCount="2">
+	                    <mx:itemRenderer>
+	                        <mx:Component>
+	                            <mx:VBox>
+	                                <mx:Script>
+                                        <![CDATA[
+                                            include "../actionscript/CourseScript.as";
+                                        ]]>
+                                    </mx:Script>
+	                                <mx:Text buttonMode="true" useHandCursor="true" mouseChildren="false" textAlign="left" width="100%" text="{data.label}" toolTip="{data.annotation}" click="navigateToPage(data.previousPageId)"/>
+	                            </mx:VBox>
+	                        </mx:Component>
+	                    </mx:itemRenderer>
+	                </mx:List>
+	            </mx:VBox>
+	            <mx:VBox width="50%" height="100%" horizontalAlign="right" verticalAlign="bottom">
+	                <mx:Label text="Outgoing links" textAlign="right" fontWeight="bold"/>
+	                <mx:List dataProvider="{visitedPage.linksToNextPages}"
+	                    width="100%" borderThickness="0" textAlign="right" rowCount="2">
+	                    <mx:itemRenderer>
+	                        <mx:Component>
+	                            <mx:VBox>
+	                                <mx:Script>
+                                        <![CDATA[
+                                            include "../actionscript/CourseScript.as";
+                                        ]]>
+                                    </mx:Script>
+	                                <mx:Text buttonMode="true" useHandCursor="true" mouseChildren="false" textAlign="right" width="100%" text="{data.label}" toolTip="{data.annotation}" click="navigateToPage(data.nextPageId)"/>
+	                            </mx:VBox>
+	                        </mx:Component>
+	                    </mx:itemRenderer>
+	                </mx:List>
+                </mx:VBox>
+        	</mx:HBox>
+        	<mx:Text buttonMode="true" useHandCursor="true" mouseChildren="false" text="Next page" fontWeight="bold" width="20%" textAlign="right" visible="{visitedPage.nextPage!=null}" click="navigateToPage(visitedPage.nextPage.id)" />
+        </mx:HBox>
+        <mx:HBox width="100%" verticalAlign="bottom" horizontalAlign="center" visible="{visitedPage.page.type.id != CONTENT_TYPE}">
+            <mx:Button  label="Submit" click="collectAnswers()" visible="{visitedPage.page.type.id == CONTROL_TYPE}" />
+            <mx:Button  label="Proceed" click="continueCourse()" visible="{visitedPage.page.type.id == RESULT_TYPE}" />
+        </mx:HBox>
+    </mx:VBox>
+</mx:Canvas>

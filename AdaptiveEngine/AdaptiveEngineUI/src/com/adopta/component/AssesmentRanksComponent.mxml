@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="730" height="300" 
+	showCloseButton="true" 
+    close="removeMe()"
+    creationComplete="initData()">
+
+    <mx:Script>
+        <![CDATA[
+        	import mx.events.ItemClickEvent;
+        	import com.adopta.service.generated.AssessmentRank;
+        	import mx.controls.sliderClasses.Slider;
+        	import mx.controls.CheckBox;
+        	import mx.events.SliderEvent;
+        	import com.adopta.service.generated.Complexity;
+        
+            include "../actionscript/AssessmentRanksScript.as";
+        
+        	import mx.collections.ArrayCollection;
+        	import com.adopta.service.generated.CoursePortfolio;
+            import mx.managers.PopUpManager;
+            
+            [Bindable]
+            public var coursePortfolio:CoursePortfolio;
+            
+            [Bindable]
+            public static var allComplexities:ArrayCollection;
+            
+            [Bindable]
+            public var assessmentRanks:ArrayCollection;
+            
+			public function initData():void {
+    	       initApp();
+    	       assessmentRanks = new ArrayCollection(coursePortfolio.assessmentRanks);
+			}
+        
+            private function removeMe():void {
+                // Put any clean-up code here.
+                PopUpManager.removePopUp(this);
+            }
+            
+            public static function displayAssessmentRank(from:Number, _to:Number):Array {
+	            var rank:Array = [from, _to];
+	            return rank;
+            }
+            
+            public static function isComplexitySelected(complexity:Object, assignedComplexities:Array):Boolean {
+                for (var i:int = 0; i < assignedComplexities.length; i++) {
+                    var assignedComplexity:Complexity = assignedComplexities[i];
+                    if (assignedComplexity.id == complexity.id) {
+                    	return true;
+                    }
+                }
+                
+                return false;
+            }
+            
+            public static function editComplexities(complexityCheckBoxes:Array, assessmentRank:Object):void {
+            	var newComplexities:Array = new Array();
+            	for (var i:int = 0; i < allComplexities.length; i++) {
+            		var complexity:Complexity = allComplexities[i];
+            		for (var j:int = 0; j < complexityCheckBoxes.length; j++) {
+            	        var complexityCheckBox:CheckBox = complexityCheckBoxes[j];
+            	        if (complexityCheckBox.label == complexity.description) {
+            	        	if (complexityCheckBox.selected) 
+            	        	    newComplexities.push(complexity);
+            	        	break;
+            	        }
+            	    }
+            	}
+            	
+            	assessmentRank.complexities = newComplexities;
+            }
+            
+            public function pressButton(event:ItemClickEvent):void {
+            	if (event.index == 0) {
+            		addAssesmentRank();
+            	} else if (event.index == 1) {
+            		removeAssesmentRank();
+            	}
+            }
+            
+            public function addAssesmentRank(): void {
+            	var assessmentRank:AssessmentRank = new AssessmentRank();
+            	assessmentRank.from = 0;
+            	assessmentRank._to = 100;
+                assessmentRank.complexities = new Array();
+                assessmentRank.coursePortfolioId = coursePortfolio.id;
+                assessmentRanks.addItem(assessmentRank);
+            }
+            
+            public function removeAssesmentRank(): void {
+            	if (assessmentRanksGrid.selectedIndex > -1) {
+            	   assessmentRanks.removeItemAt(assessmentRanksGrid.selectedIndex);
+            	}
+            }
+        ]]>
+    </mx:Script>
+    
+    <mx:VBox height="100%" width="100%">
+	    <mx:ButtonBar itemClick="pressButton(event);">
+	        <mx:dataProvider>
+	            <mx:String>Add</mx:String>
+	            <mx:String>Remove</mx:String>
+	        </mx:dataProvider>
+	    </mx:ButtonBar>
+	    <mx:DataGrid id="assessmentRanksGrid" dataProvider="{assessmentRanks}" editable="false" width="100%" height="100%" rowHeight="40">
+	    	<mx:columns>
+	    		<mx:DataGridColumn headerText="Assessment Rank" width="40">
+	                <mx:itemRenderer>
+	                    <mx:Component>
+	                        <mx:VBox>
+	                            <mx:Script>
+	                            	<![CDATA[
+	                            		import mx.controls.sliderClasses.Slider;
+	                            	]]>
+	                            </mx:Script>
+	                            <mx:HSlider thumbCount="2" maximum="100" snapInterval="1" 
+	                            	tickInterval="25" labels="[0,25,50,75,100]" width="100%" 
+	                            	values="{AssesmentRanksComponent.displayAssessmentRank(data.from, data._to)}"
+	                            	change="data.from=Slider(event.currentTarget).values[0];data._to=Slider(event.currentTarget).values[1]"/> 
+	                        </mx:VBox>
+	                    </mx:Component>
+	                </mx:itemRenderer>
+	    		</mx:DataGridColumn>
+	    		<mx:DataGridColumn paddingLeft="5" headerText="Complexity" width="60">
+	                <mx:itemRenderer>
+	                    <mx:Component>
+	                        <mx:HBox width="100%">
+	                            <mx:Script>
+	                            	<![CDATA[
+	                            		import com.adopta.service.generated.AssessmentRank;
+	                            	]]>
+	                            </mx:Script>
+	                            <mx:Repeater id="complexities" dataProvider="{AssesmentRanksComponent.allComplexities}" width="100%">
+	                                <mx:CheckBox id="compexityCheckBoxes" label="{complexities.currentItem.description}" selected="{AssesmentRanksComponent.isComplexitySelected(complexities.currentItem, data.complexities)}" 
+	                                	click="AssesmentRanksComponent.editComplexities(compexityCheckBoxes, data)"/> 
+	                            </mx:Repeater>                        	
+	                        </mx:HBox>
+	                    </mx:Component>
+	                </mx:itemRenderer>	
+	    		</mx:DataGridColumn>
+	    	</mx:columns>
+	    </mx:DataGrid>
+    </mx:VBox>
+</mx:TitleWindow>
